@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 [build]
+=======
+[build]
+>>>>>>> 4461c7c26d8418073941948849d631e3f6ae9f38
   functions = "functions"
