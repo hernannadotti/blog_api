@@ -16,6 +16,7 @@ async function connectToDatabase() {
 }
 
 exports.handler = async (event, context) => {
+    
     try {
         await connectToDatabase();
         const posts = await Post.find();
