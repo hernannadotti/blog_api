@@ -1,33 +1,35 @@
-const mongoose = require('mongoose');
-const Post = require('../models/Post');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import Post from './models/Post.js';
 
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+dotenv.config();
 const mongoUri = process.env.MONGO_URI;
+const port = process.env.PORT || 8080;
 
-let isConnected = false;
+mongoose.connect(mongoUri)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
 
-async function connectToDatabase() {
-    if (!isConnected) {
-        await mongoose.connect(mongoUri, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        isConnected = true;
-    }
-}
 
-exports.handler = async (event, context) => {
-    
-    try {
-        await connectToDatabase();
-        const posts = await Post.find();
-        return {
-            statusCode: 200,
-            body: JSON.stringify(posts),
-        };
-    } catch (error) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'Internal Server Error' }),
-        };
-    }
-};
+
+app.get('/posts', async (req, res) => {
+    const posts = await Post.find();
+    res.json(posts);
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+
+
+
+
+
+
