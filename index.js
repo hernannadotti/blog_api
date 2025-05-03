@@ -23,9 +23,9 @@ app.get('/posts', async (req, res) => {
     res.json(posts);
 });
 
-app.get('/posts/:id', async (req, res) => {
+app.get('/blog/:slug', async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.slug);
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
