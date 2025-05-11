@@ -1,10 +1,6 @@
 import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
-    },
     slug: {
         type: String,
         required: true
