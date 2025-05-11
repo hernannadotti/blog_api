@@ -19,13 +19,8 @@ mongoose.connect(mongoUri)
 
 
 app.get('/posts', async (req, res) => {
-    try {
-        const posts = await Post.find();
-        res.json(posts);
-    } catch (error) {
-        console.error('Error fetching posts:', error);
-        res.status(500).json({ message: 'Error fetching posts', error });
-    }
+    const posts = await Post.find();
+    res.json(posts);
 });
 
 app.get('/blog/:slug', async (req, res) => {
@@ -38,36 +33,4 @@ app.get('/blog/:slug', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving the post', error });
   }
-});
-
-app.post('/posts/:id/vote', async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-    post.upVotes += 1;
-    await post.save();
-    res.json(post);
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating vote count', error });
-  }
-});
-
-app.post('/posts/:id/downvote', async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-    post.downVotes += 1;
-    await post.save();
-    res.json(post);
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating vote count', error });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
 });
