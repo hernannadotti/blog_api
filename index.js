@@ -19,8 +19,12 @@ mongoose.connect(mongoUri)
 
 
 app.get('/posts', async (req, res) => {
+  try {
     const posts = await Post.find();
     res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving posts', error });
+  }
 });
 
 app.get('/blog/:slug', async (req, res) => {
