@@ -15,7 +15,7 @@ const mongoUri = process.env.MONGO_URI;
 const port = process.env.PORT || 8080;
 
 mongoose.connect(mongoUri)
-  .then(() => console.log('Connected to MongoDB'))
+  .then(() => console.log('Connected now to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
 
 // Route to get all posts
