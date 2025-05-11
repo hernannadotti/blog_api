@@ -1,5 +1,3 @@
-"use client";
-
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -14,18 +12,13 @@ dotenv.config();
 const mongoUri = process.env.MONGO_URI;
 const port = process.env.PORT || 8080;
 
+// Connect to MongoDB when the module loads (typical for serverless)
 mongoose.connect(mongoUri)
-  .then(() => {
-    console.log('Connected now to MongoDB');
-    // Start the server only after the database connection is successful
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  })
+  .then(() => console.log('MongoDB connected successfully via mongoose.connect.'))
   .catch(err => {
-    console.error('Error connecting to MongoDB:', err);
-    // Optionally, exit the process if the database connection fails
-    // process.exit(1); 
+    console.error('Initial MongoDB connection error:', err);
+    // Note: In a serverless environment, the function might still try to serve requests
+    // even if the initial DB connection fails. Routes should handle DB errors.
   });
 
 // Route to get all posts
