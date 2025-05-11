@@ -30,11 +30,19 @@ mongoose.connect(mongoUri)
 
 // Route to get all posts
 app.get('/posts', async (req, res) => {
+  console.log('[/posts] route hit');
   try {
+    console.log('Attempting to fetch posts with Post.find()');
     const posts = await Post.find();
+    console.log('Post.find() executed. Number of posts found:', posts ? posts.length : 'null/undefined');
+    if (posts && posts.length > 0) {
+      console.log('First post (sample):', JSON.stringify(posts[0], null, 2));
+    } else {
+      console.log('No posts found or posts array is empty.');
+    }
     res.json(posts);
   } catch (error) {
-    console.error('Error fetching posts:', error); // Log the error for debugging
+    console.error('Error fetching posts in /posts route:', error);
     res.status(500).json({ message: 'Error fetching posts', error: error.message });
   }
 });
