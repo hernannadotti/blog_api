@@ -18,25 +18,12 @@ mongoose.connect(mongoUri)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
 
-
-
+// Route to get all posts
 app.get('/posts', async (req, res) => {
   try {
     const posts = await Post.find();
     res.json(posts);
   } catch (error) {
-    res.status(500).json({ message: 'Error retrieving posts', error });
-  }
-});
-
-app.get('/blog/:slug', async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.slug);
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-    res.json(post);
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving the post', error });
+    res.status(500).json({ message: error.message });
   }
 });
