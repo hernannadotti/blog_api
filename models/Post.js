@@ -28,6 +28,14 @@ const postSchema = new mongoose.Schema({
     image: {
         type: String,
         required: false
+    },
+    upVotes: {
+        type: Number,
+        default: 0
+    },
+    downVotes: {
+        type: Number,
+        default: 0
     }
 }, { collection: 'posts' });
 

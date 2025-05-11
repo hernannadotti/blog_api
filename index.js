@@ -35,13 +35,34 @@ app.get('/blog/:slug', async (req, res) => {
   }
 });
 
+app.post('/posts/:id/vote', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    post.upVotes += 1;
+    await post.save();
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating vote count', error });
+  }
+});
+
+app.post('/posts/:id/downvote', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    post.downVotes += 1;
+    await post.save();
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating vote count', error });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-
-
-
-
-
-
