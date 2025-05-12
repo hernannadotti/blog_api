@@ -5,7 +5,7 @@ import Post from './models/Post.js'; // Assuming Post.js is in a 'models' direct
 const app = express();
 const port = process.env.PORT || 8080; // Vercel sets PORT automatically
 // Restoring the fallback URI as a safeguard
-const mongoUri = process.env.MONGO_URI || 'mongodb+srv://hernan12345:sc4r3toDoAnotherJob@blogcluster.1hqlzkd.mongodb.net/';
+const mongoUri = process.env.MONGO_URI;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
