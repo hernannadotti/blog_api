@@ -55,5 +55,3 @@ app.get('/blog/:slug', async (req, res) => {
     res.status(500).json({ message: 'Error retrieving the post', error: error.message });
   }
 });
-
-export default app;
