@@ -4,7 +4,8 @@ import Post from './models/Post.js'; // Assuming Post.js is in a 'models' direct
 
 const app = express();
 const port = process.env.PORT || 8080; // Vercel sets PORT automatically
-const mongoUri = process.env.MONGO_URI;
+// Restoring the fallback URI as a safeguard
+const mongoUri = process.env.MONGO_URI || 'mongodb+srv://hernan12345:sc4r3toDoAnotherJob@blogcluster.1hqlzkd.mongodb.net/';
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -12,23 +13,26 @@ app.use(express.json());
 // Connect to MongoDB
 let dbConnected = false;
 const connectDB = async () => {
-  if (dbConnected) return;
+  if (dbConnected) {
+    console.log('MongoDB already connected.');
+    return;
+  }
+  if (!mongoUri) {
+    console.error('MongoDB connection error: MONGO_URI is not defined.');
+    // dbConnected remains false
+    return;
+  }
   try {
     await mongoose.connect(mongoUri);
     dbConnected = true;
     console.log('MongoDB connected successfully');
   } catch (err) {
     console.error('MongoDB connection error:', err.message);
-    // Exit process with failure in a server environment if DB connection is critical at startup
-    // For serverless, we might want to allow the function to attempt connection on each invocation
-    // or handle errors gracefully per request.
-    // For now, we'll log the error and subsequent requests might fail if DB is needed.
+    // dbConnected remains false
   }
 };
 
-// Ensure DB is connected before handling requests that need it.
-// For Vercel, this connection might happen on each cold start.
-// A more robust approach for serverless might involve connecting on demand.
+// Initial connection attempt
 connectDB();
 
 app.get('/', (req, res) => {
@@ -37,10 +41,11 @@ app.get('/', (req, res) => {
 
 app.get('/posts', async (req, res) => {
   if (!dbConnected) {
-    // Attempt to reconnect if not connected.
-    await connectDB();
+    console.log('No DB connection in /posts, attempting to connect...');
+    await connectDB(); // Attempt to connect if not already connected
     if (!dbConnected) {
-        return res.status(503).send('Service unavailable: Database not connected.');
+      // If still not connected after attempt, send error
+      return res.status(503).send('Service unavailable: Database not connected.');
     }
   }
   try {
