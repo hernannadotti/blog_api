@@ -23,7 +23,6 @@ mongoose.connect(mongoUri)
 
 // Route to get all posts
 app.get('/posts', async (req, res) => {
-  console.log('[/posts] route hit');
   try {
     console.log('Attempting to fetch posts with Post.find()');
     const posts = await Post.find();
