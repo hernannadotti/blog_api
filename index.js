@@ -1,67 +1,32 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import Post from './models/Post.js'; // Assuming Post.js is in a 'models' directory
+export default function handler(req, res) {
+  // Line 2: Simple log
+  console.log('Minimal handler invoked.'); 
+  
+  // Line 5: Check for the specific character if it appears in logs
+  const testChar = 'ç'; 
+  console.log('Is ç defined? typeof testChar:', typeof testChar, testChar.charCodeAt(0));
 
-const app = express();
-const port = process.env.PORT || 8080; // Vercel sets PORT automatically
-// Restoring the fallback URI as a safeguard
-const mongoUri = process.env.MONGO_URI;
-
-// Middleware to parse JSON bodies
-app.use(express.json());
-
-// Connect to MongoDB
-let dbConnected = false;
-const connectDB = async () => {
-  if (dbConnected) {
-    console.log('MongoDB already connected.');
-    return;
-  }
-  if (!mongoUri) {
-    console.error('MongoDB connection error: MONGO_URI is not defined.');
-    // dbConnected remains false
-    return;
-  }
-  try {
-    await mongoose.connect(mongoUri);
-    dbConnected = true;
-    console.log('MongoDB connected successfully');
-  } catch (err) {
-    console.error('MongoDB connection error:', err.message);
-    // dbConnected remains false
-  }
-};
-
-// Initial connection attempt
-connectDB();
-
-app.get('/', (req, res) => {
-  res.send('Express app with MongoDB integration is running!');
-});
-
-app.get('/posts', async (req, res) => {
-  if (!dbConnected) {
-    console.log('No DB connection in /posts, attempting to connect...');
-    await connectDB(); // Attempt to connect if not already connected
-    if (!dbConnected) {
-      // If still not connected after attempt, send error
-      return res.status(503).send('Service unavailable: Database not connected.');
-    }
-  }
-  try {
-    const posts = await Post.find({}); // Fetch all posts
-    res.json(posts);
-  } catch (err) {
-    console.error('Error fetching posts:', err);
-    res.status(500).send('Error fetching posts from database.');
-  }
-});
-
-// If not running on Vercel (i.e., locally for testing, though Vercel CLI handles this)
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-  });
+  // Line 9
+  // Line 10
+  // Line 11
+  // Line 12
+  // Line 13
+  // Line 14
+  // Line 15
+  // Line 16
+  // Line 17
+  // Line 18
+  // Line 19
+  // Line 20
+  // Line 21
+  // Line 22
+  // Line 23
+  // Line 24
+  // Line 25
+  // Line 26
+  // Line 27
+  // Line 28
+  // Line 29: Intentionally placing a comment here to see if error line 30 is affected
+  // This is line 30.
+  res.status(200).send('Minimal Vercel function is running!');
 }
-
-export default app;
