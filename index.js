@@ -1,57 +1,41 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import Post from './models/Post.js';
-
-
 const app = express();
-app.use(cors());
-app.use(express.json());
-dotenv.config();
-const mongoUri = process.env.MONGO_URI;
 const port = process.env.PORT || 8080;
 
-// Connect to MongoDB when the module loads (typical for serverless)
-mongoose.connect(mongoUri)
-  .then(() => console.log('MongoDB connected successfully via mongoose.connect.'))
-  .catch(err => {
-    console.error('Initial MongoDB connection error:', err);
-    // Note: In a serverless environment, the function might still try to serve requests
-    // even if the initial DB connection fails. Routes should handle DB errors.
-  });
+app.get('/', (req, res) => {
+  res.send('Minimal diagnostic app is running!');
+});
 
-// Route to get all posts
-app.get('/posts', async (req, res) => {
+app.get('/posts', (req, res) => {
+  // This is the route that was previously erroring.
+  // We'll make it very simple.
   try {
-    console.log('Attempting to fetch posts with Post.find()');
-    const posts = await Post.find();
-    if (posts && posts.length > 0) {
-      console.log('First post (sample):', JSON.stringify(posts[0], null, 2));
-    } else {
-      console.log('No posts found or posts array is empty.');
-    }
-    res.json(posts);
-  } catch (error) {
-    console.error('Error fetching posts in /posts route:', error);
-    res.status(500).json({ message: 'Error fetching posts', error: error.message });
+    res.send('Minimal /posts route is working!');
+  } catch (e) {
+    // This catch block is just for safety, though unlikely to be hit.
+    // The original error was on line 30. This file is much shorter.
+    // If the error still points to line 30, it's a strong indicator
+    // that Vercel is not using the newly deployed file content correctly.
+    console.error('Error in minimal /posts:', e);
+    res.status(500).send('Minimal /posts error.');
   }
 });
 
-// Assuming the /blog/:slug route was also intended to be kept
-// If it was removed intentionally, this part can be omitted.
-// If you have the content of models/Post.js, I can verify if findById is appropriate.
-// For now, I'm re-adding a generic version of it.
-app.get('/blog/:slug', async (req, res) => {
-  try {
-    // This assumes 'slug' is the ID. If it's a different field, adjust Post.findOne({ slug: req.params.slug })
-    const post = await Post.findById(req.params.slug); 
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-    res.json(post);
-  } catch (error) {
-    console.error('Error retrieving post by slug:', error);
-    res.status(500).json({ message: 'Error retrieving the post', error: error.message });
-  }
-});
+// Adding a few more lines to ensure we are past where line 30 would be
+// in a more complex file, just for thoroughness, though the file will be short.
+console.log("Minimal app initialized.");
+console.log("Test line 1");
+console.log("Test line 2");
+console.log("Test line 3");
+console.log("Test line 4");
+console.log("Test line 5");
+console.log("Test line 6");
+console.log("Test line 7");
+console.log("Test line 8"); // This would be around line 25
+console.log("Test line 9");
+console.log("Test line 10");
+console.log("Test line 11");
+console.log("Test line 12");
+console.log("Test line 13"); // This is line 30 in this new file
+
+export default app;
