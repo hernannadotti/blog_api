@@ -27,7 +27,6 @@ app.get('/posts', async (req, res) => {
   try {
     console.log('Attempting to fetch posts with Post.find()');
     const posts = await Post.find();
-    console.log('Post.find() executed. Number of posts found:', posts ? posts.length : 'null/undefined');ç
     if (posts && posts.length > 0) {
       console.log('First post (sample):', JSON.stringify(posts[0], null, 2));
     } else {
